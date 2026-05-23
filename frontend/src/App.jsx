@@ -10,6 +10,7 @@ import RoomAllocation from "./pages/RoomAllocation";
 import CleaningManagement from "./pages/CleaningManagement";
 import VisitorManagement from "./pages/VisitorManagement";
 import PaymentManagement from "./pages/PaymentManagement";
+import Components from "./components";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/cleaning-management" element={<CleaningManagement />} />
         <Route path="/visitor-management" element={<VisitorManagement />} />
         <Route path="/payment-management" element={<PaymentManagement />} />
+        <Route path="/complaints" element={<Complaints />} />
       </Routes>
     </BrowserRouter>
   );
