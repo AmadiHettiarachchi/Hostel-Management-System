@@ -15,6 +15,9 @@ import Complaints from "./pages/Complaints";
 import StudentProfile from "./pages/StudentProfile";
 import StudentQR from "./pages/StudentQR";
 import StudentCleaning from "./pages/StudentCleaning";
+import StudentPayments from "./pages/StudentPayments";
+import StudentFeedback from "./pages/StudentFeedback";
+import StudentRatings from "./pages/StudentRatings";
 
 function App() {
   return (
@@ -39,6 +42,9 @@ function App() {
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/student-qr" element={<StudentQR />} />
         <Route path="/student-cleaning" element={<StudentCleaning />} />
+        <Route path="/student-payments" element={<StudentPayments />} />
+        <Route path="/student-feedback" element={<StudentFeedback />} />
+        <Route path="/student-ratings" element={<StudentRatings />} />
       </Routes>
     </BrowserRouter>
   );
