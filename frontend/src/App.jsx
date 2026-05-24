@@ -12,6 +12,9 @@ import VisitorManagement from "./pages/VisitorManagement";
 import PaymentManagement from "./pages/PaymentManagement";
 import CheckRecords from "./pages/CheckRecords";
 import Complaints from "./pages/Complaints";
+import StudentProfile from "./pages/StudentProfile";
+import StudentQR from "./pages/StudentQR";
+import StudentCleaning from "./pages/StudentCleaning";
 
 function App() {
   return (
@@ -33,6 +36,9 @@ function App() {
         <Route path="/payment-management" element={<PaymentManagement />} />
         <Route path="/check-records" element={<CheckRecords />} />
         <Route path="/complaints" element={<Complaints />} />
+        <Route path="/student-profile" element={<StudentProfile />} />
+        <Route path="/student-qr" element={<StudentQR />} />
+        <Route path="/student-cleaning" element={<StudentCleaning />} />
       </Routes>
     </BrowserRouter>
   );
