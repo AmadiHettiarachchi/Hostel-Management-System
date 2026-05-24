@@ -9,7 +9,6 @@ import {
   IdCard,
   UserPlus,
 } from "lucide-react";
-import API from "../api/axios";
 
 function Register() {
   const navigate = useNavigate();
@@ -31,23 +30,34 @@ function Register() {
   };
 
   const handleRegister = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  console.log("FORM DATA:", JSON.stringify(form, null, 2));
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
 
-  try {
-    const res = await API.post("/auth/register", form);
+      const data = await res.json();
 
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+      if (!res.ok) {
+        alert(data.message || "Registration failed");
+        return;
+      }
 
-    alert("Registration successful");
-    navigate("/student-dashboard");
-  } catch (error) {
-    console.log("REGISTER ERROR:", JSON.stringify(error.response?.data, null, 2));
-    alert(error.response?.data?.message || "Registration failed");
-  }
-};
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      alert("Registration successful");
+      navigate("/student-dashboard");
+    } catch (error) {
+      console.log("REGISTER ERROR:", error);
+      alert("Server error. Please check backend.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#F6EFE6] text-[#3B2F2F] flex items-center justify-center px-6 py-10">
@@ -61,7 +71,7 @@ function Register() {
         </Link>
 
         <div className="mb-8">
-          <h1 className="text-3xl font-black mb-2" style={{ color: "#800080" }}>
+          <h1 className="text-3xl font-black mb-2 text-[#800080]" style={{ color: "#800080" }}>
             Create Student Account
           </h1>
           <p className="text-[#7A6252]">
@@ -70,61 +80,12 @@ function Register() {
         </div>
 
         <form onSubmit={handleRegister} className="grid md:grid-cols-2 gap-5">
-          <Input
-            icon={User}
-            label="Full Name"
-            name="fullName"
-            placeholder="Enter full name"
-            value={form.fullName}
-            onChange={handleChange}
-          />
-
-          <Input
-            icon={Mail}
-            label="Email"
-            name="email"
-            placeholder="Enter email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-          />
-
-          <Input
-            icon={Phone}
-            label="Phone Number"
-            name="phone"
-            placeholder="Enter phone number"
-            value={form.phone}
-            onChange={handleChange}
-          />
-
-          <Input
-            icon={IdCard}
-            label="NIC"
-            name="nic"
-            placeholder="Enter NIC number"
-            value={form.nic}
-            onChange={handleChange}
-          />
-
-          <Input
-            icon={Phone}
-            label="Parent Phone Number"
-            name="parentPhone"
-            placeholder="Enter parent phone number"
-            value={form.parentPhone}
-            onChange={handleChange}
-          />
-
-          <Input
-            icon={Lock}
-            label="Password"
-            name="password"
-            placeholder="Enter password"
-            type="password"
-            value={form.password}
-            onChange={handleChange}
-          />
+          <Input icon={User} label="Full Name" name="fullName" placeholder="Enter full name" value={form.fullName} onChange={handleChange} />
+          <Input icon={Mail} label="Email" name="email" placeholder="Enter email" type="email" value={form.email} onChange={handleChange} />
+          <Input icon={Phone} label="Phone Number" name="phone" placeholder="Enter phone number" value={form.phone} onChange={handleChange} />
+          <Input icon={IdCard} label="NIC" name="nic" placeholder="Enter NIC number" value={form.nic} onChange={handleChange} />
+          <Input icon={Phone} label="Parent Phone Number" name="parentPhone" placeholder="Enter parent phone number" value={form.parentPhone} onChange={handleChange} />
+          <Input icon={Lock} label="Password" name="password" placeholder="Enter password" type="password" value={form.password} onChange={handleChange} />
 
           <div className="md:col-span-2">
             <button
@@ -148,22 +109,12 @@ function Register() {
   );
 }
 
-function Input({
-  icon: Icon,
-  label,
-  name,
-  placeholder,
-  type = "text",
-  value,
-  onChange,
-}) {
+function Input({ icon: Icon, label, name, placeholder, type = "text", value, onChange }) {
   return (
     <div>
       <label className="text-sm font-bold text-[#5C4033]">{label}</label>
-
       <div className="mt-2 flex items-center gap-3 bg-[#F6EFE6] border border-[#E7CDB5] rounded-xl px-4 py-3">
         <Icon size={18} className="text-[#7A6252]" />
-
         <input
           name={name}
           type={type}
