@@ -19,13 +19,15 @@ const roomSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    facilities: {
-      type: String,
-      required: true,
-    },
+    allocatedStudents: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     status: {
       type: String,
-      enum: ["Available", "Booked", "Occupied", "Maintenance"],
+      enum: ["Available", "Occupied", "Full", "Maintenance"],
       default: "Available",
     },
   },
