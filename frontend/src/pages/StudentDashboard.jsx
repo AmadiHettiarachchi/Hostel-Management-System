@@ -23,7 +23,7 @@ function StudentDashboard() {
     <div className="min-h-screen bg-[#F6EFE6] text-[#3B2F2F]">
       <header className="bg-[#F3E2D0] border-b border-[#E7CDB5] px-8 py-5 flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-black">Student Dashboard</h1>
+          <h1 className="text-2xl font-black" style={{ color: "#800080"}}>Student Dashboard</h1>
           <p className="text-sm text-[#7A6252]">
             Manage your hostel account
           </p>

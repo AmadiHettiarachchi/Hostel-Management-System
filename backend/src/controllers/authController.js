@@ -13,17 +13,13 @@ export const registerStudent = async (req, res) => {
     const { fullName, email, phone, nic, parentPhone, password } = req.body;
 
     if (!fullName || !email || !phone || !nic || !parentPhone || !password) {
-      return res.status(400).json({
-        message: "All fields are required",
-      });
+      return res.status(400).json({ message: "All fields are required" });
     }
 
     const exists = await User.findOne({ email });
 
     if (exists) {
-      return res.status(400).json({
-        message: "Email already registered",
-      });
+      return res.status(400).json({ message: "Email already registered" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -48,9 +44,7 @@ export const registerStudent = async (req, res) => {
       token: createToken(student._id, "student"),
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -77,17 +71,13 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(401).json({
-        message: "Invalid email or password",
-      });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({
-        message: "Invalid email or password",
-      });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
     res.json({
@@ -101,8 +91,6 @@ export const loginUser = async (req, res) => {
       token: createToken(user._id, "student"),
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
