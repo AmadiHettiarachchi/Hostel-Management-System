@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import BackendTest from "./pages/BackendTest";
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -45,6 +47,8 @@ function App() {
         <Route path="/student-payments" element={<StudentPayments />} />
         <Route path="/student-feedback" element={<StudentFeedback />} />
         <Route path="/student-ratings" element={<StudentRatings />} />
+
+        <Route path="/backend-test" element={<BackendTest />} />
       </Routes>
     </BrowserRouter>
   );
