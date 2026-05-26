@@ -1,16 +1,25 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, BedDouble, UserPlus, Search } from "lucide-react";
+import {
+  ArrowLeft,
+  BedDouble,
+  UserPlus,
+  Search,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 
 function RoomAllocation() {
   const [rooms, setRooms] = useState([]);
   const [students, setStudents] = useState([]);
+  const [editingRoomId, setEditingRoomId] = useState(null);
 
   const [form, setForm] = useState({
     roomNumber: "",
     floor: "",
     capacity: "",
     type: "",
+    imageUrl: "",
   });
 
   const [allocation, setAllocation] = useState({
@@ -66,7 +75,18 @@ function RoomAllocation() {
     }
   };
 
-  const handleAddRoom = async (e) => {
+  const resetForm = () => {
+    setForm({
+      roomNumber: "",
+      floor: "",
+      capacity: "",
+      type: "",
+      imageUrl: "",
+    });
+    setEditingRoomId(null);
+  };
+
+  const handleAddOrUpdateRoom = async (e) => {
     e.preventDefault();
 
     const roomCapacity = Number(form.capacity);
@@ -77,8 +97,11 @@ function RoomAllocation() {
     }
 
     try {
-      const res = await fetch(API_URL, {
-        method: "POST",
+      const url = editingRoomId ? `${API_URL}/${editingRoomId}` : API_URL;
+      const method = editingRoomId ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -91,22 +114,56 @@ function RoomAllocation() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message || "Room creation failed");
+        alert(data.message || "Room save failed");
         return;
       }
 
-      alert("Room added successfully");
+      alert(editingRoomId ? "Room updated successfully" : "Room added successfully");
 
-      setForm({
-        roomNumber: "",
-        floor: "",
-        capacity: "",
-        type: "",
-      });
-
+      resetForm();
       fetchRooms();
     } catch (error) {
-      console.log("Add room error:", error);
+      console.log("Room save error:", error);
+      alert("Server error");
+    }
+  };
+
+  const handleEditRoom = (room) => {
+    setEditingRoomId(room._id);
+
+    setForm({
+      roomNumber: room.roomNumber || "",
+      floor: room.floor || "",
+      capacity: room.capacity || "",
+      type: room.type || "",
+      imageUrl: room.imageUrl || "",
+    });
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleDeleteRoom = async (roomId) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this room?");
+
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`${API_URL}/${roomId}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Delete failed");
+        return;
+      }
+
+      alert("Room deleted successfully");
+      fetchRooms();
+      fetchUnallocatedStudents();
+    } catch (error) {
+      console.log("Delete room error:", error);
       alert("Server error");
     }
   };
@@ -160,7 +217,7 @@ function RoomAllocation() {
             Room Allocation
           </h1>
           <p className="text-sm text-[#7A6252]">
-            Add rooms and allocate unassigned students to available rooms
+            Add, edit, delete rooms and allocate unassigned students
           </p>
         </div>
 
@@ -178,10 +235,12 @@ function RoomAllocation() {
           <div className="bg-[#FFF7ED] border border-[#E7CDB5] rounded-[2rem] p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
               <BedDouble className="text-[#800080]" size={30} />
-              <h2 className="text-2xl font-black">Add Room</h2>
+              <h2 className="text-2xl font-black">
+                {editingRoomId ? "Edit Room" : "Add Room"}
+              </h2>
             </div>
 
-            <form onSubmit={handleAddRoom} className="space-y-4">
+            <form onSubmit={handleAddOrUpdateRoom} className="space-y-4">
               <Input
                 label="Room Number"
                 name="roomNumber"
@@ -217,12 +276,31 @@ function RoomAllocation() {
                 placeholder="Example: A/C, Non A/C"
               />
 
+              <Input
+                label="Room Image URL"
+                name="imageUrl"
+                value={form.imageUrl}
+                onChange={handleChange}
+                placeholder="Paste room image URL"
+                required={false}
+              />
+
               <button
                 type="submit"
                 className="w-full bg-[#800080] text-white py-4 rounded-xl font-black hover:bg-[#6A006A]"
               >
-                Add Room
+                {editingRoomId ? "Update Room" : "Add Room"}
               </button>
+
+              {editingRoomId && (
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="w-full bg-[#F6EFE6] border border-[#E7CDB5] text-[#3B2F2F] py-4 rounded-xl font-black hover:bg-[#F3E2D0]"
+                >
+                  Cancel Edit
+                </button>
+              )}
             </form>
           </div>
 
@@ -302,21 +380,25 @@ function RoomAllocation() {
                   key={room._id}
                   className="bg-[#F6EFE6] border border-[#E7CDB5] rounded-2xl p-5"
                 >
+                  <div className="h-40 bg-[#F3E2D0] rounded-2xl mb-4 flex items-center justify-center overflow-hidden">
+                    {room.imageUrl ? (
+                      <img
+                        src={room.imageUrl}
+                        alt={`Room ${room.roomNumber}`}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <BedDouble className="text-[#800080]" size={50} />
+                    )}
+                  </div>
+
                   <h3 className="text-xl font-black">
                     Room {room.roomNumber}
                   </h3>
 
-                  <p className="text-[#7A6252] text-sm">
-                    Floor: {room.floor}
-                  </p>
-
-                  <p className="text-[#7A6252] text-sm">
-                    Capacity: {room.capacity}
-                  </p>
-
-                  <p className="text-[#7A6252] text-sm">
-                    Type: {room.type}
-                  </p>
+                  <p className="text-[#7A6252] text-sm">Floor: {room.floor}</p>
+                  <p className="text-[#7A6252] text-sm">Capacity: {room.capacity}</p>
+                  <p className="text-[#7A6252] text-sm">Type: {room.type}</p>
 
                   <p className="text-[#7A6252] text-sm mt-3 font-bold">
                     Allocated Students:
@@ -335,6 +417,26 @@ function RoomAllocation() {
                   <span className="inline-block mt-4 bg-[#800080] text-white px-3 py-1 rounded-full text-xs font-bold">
                     {room.status}
                   </span>
+
+                  <div className="grid grid-cols-2 gap-3 mt-5">
+                    <button
+                      type="button"
+                      onClick={() => handleEditRoom(room)}
+                      className="flex items-center justify-center gap-2 bg-[#F3E2D0] border border-[#E7CDB5] text-[#3B2F2F] py-3 rounded-xl font-bold hover:bg-[#E7CDB5]"
+                    >
+                      <Pencil size={17} />
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteRoom(room._id)}
+                      className="flex items-center justify-center gap-2 bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700"
+                    >
+                      <Trash2 size={17} />
+                      Delete
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -354,6 +456,7 @@ function Input({
   type = "text",
   min,
   max,
+  required = true,
 }) {
   return (
     <div>
@@ -367,7 +470,7 @@ function Input({
         min={min}
         max={max}
         placeholder={placeholder}
-        required
+        required={required}
         className="mt-2 w-full bg-[#F6EFE6] border border-[#E7CDB5] rounded-xl px-4 py-3 outline-none text-[#3B2F2F] placeholder:text-[#9A7B65]"
       />
     </div>

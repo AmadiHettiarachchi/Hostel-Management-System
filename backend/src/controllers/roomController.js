@@ -3,7 +3,7 @@ import User from "../models/User.js";
 
 export const createRoom = async (req, res) => {
   try {
-    const { roomNumber, floor, capacity, type } = req.body;
+    const { roomNumber, floor, capacity, type, imageUrl } = req.body;
 
     if (!roomNumber || !floor || !capacity || !type) {
       return res.status(400).json({
@@ -24,6 +24,7 @@ export const createRoom = async (req, res) => {
       floor,
       capacity: roomCapacity,
       type,
+      imageUrl,
     });
 
     res.status(201).json(room);
@@ -116,6 +117,70 @@ export const allocateStudentToRoom = async (req, res) => {
     res.json({
       message: "Student allocated successfully",
       room: updatedRoom,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const updateRoom = async (req, res) => {
+  try {
+    const { roomNumber, floor, capacity, type, imageUrl } = req.body;
+
+    if (!roomNumber || !floor || !capacity || !type) {
+      return res.status(400).json({
+        message: "All room fields are required",
+      });
+    }
+
+    const roomCapacity = Number(capacity);
+
+    if (roomCapacity < 1 || roomCapacity > 3) {
+      return res.status(400).json({
+        message: "Room capacity must be between 1 and 3",
+      });
+    }
+
+    const room = await Room.findByIdAndUpdate(
+      req.params.id,
+      {
+        roomNumber,
+        floor,
+        capacity: roomCapacity,
+        type,
+        imageUrl,
+      },
+      { new: true }
+    );
+
+    if (!room) {
+      return res.status(404).json({
+        message: "Room not found",
+      });
+    }
+
+    res.json(room);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const deleteRoom = async (req, res) => {
+  try {
+    const room = await Room.findByIdAndDelete(req.params.id);
+
+    if (!room) {
+      return res.status(404).json({
+        message: "Room not found",
+      });
+    }
+
+    res.json({
+      message: "Room deleted successfully",
     });
   } catch (error) {
     res.status(500).json({

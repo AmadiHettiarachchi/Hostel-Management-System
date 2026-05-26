@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Lock, Mail, LogIn } from "lucide-react";
 import API from "../api/axios";
+import bg from "../assets/background.jpg";
 
 function Login() {
   const navigate = useNavigate();
@@ -38,7 +39,16 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F6EFE6] text-[#3B2F2F] flex items-center justify-center px-6">
+    <div
+      className="min-h-screen text-[#3B2F2F] flex items-center justify-center px-6"
+      style={{
+        backgroundImage: `linear-gradient(rgba(246,239,230,0.84), rgba(246,239,230,0.84)), url(${bg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+>
       <div className="w-full max-w-md bg-[#FFF7ED] border border-[#E7CDB5] rounded-[2rem] p-8 shadow-xl">
         <Link
           to="/"

@@ -20,6 +20,8 @@ import StudentCleaning from "./pages/StudentCleaning";
 import StudentPayments from "./pages/StudentPayments";
 import StudentFeedback from "./pages/StudentFeedback";
 import StudentRatings from "./pages/StudentRatings";
+import RoomGallery from "./pages/RoomGallery";
+
 
 function App() {
   return (
@@ -47,6 +49,7 @@ function App() {
         <Route path="/student-payments" element={<StudentPayments />} />
         <Route path="/student-feedback" element={<StudentFeedback />} />
         <Route path="/student-ratings" element={<StudentRatings />} />
+        <Route path="/rooms" element={<RoomGallery />} />
 
         <Route path="/backend-test" element={<BackendTest />} />
       </Routes>

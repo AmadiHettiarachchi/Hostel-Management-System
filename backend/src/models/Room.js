@@ -19,6 +19,10 @@ const roomSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    imageUrl: {
+      type: String,
+      default: "",
+    },
     allocatedStudents: [
       {
         type: mongoose.Schema.Types.ObjectId,
