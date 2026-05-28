@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { QrCode } from "lucide-react";
 import {
   BedDouble,
   Sparkles,
@@ -16,7 +17,8 @@ function WardenDashboard() {
     { title: "Payment Management", icon: CreditCard, path: "/payment-management" },
     { title: "Visitor Management", icon: Users, path: "/visitor-management" },
     { title: "Feedback / Complaints", icon: MessageSquare, path: "/complaints" },
-    { title: "Check-in / Check-out Records", icon: Clock, path: "/check-records" }
+    { title: "Check-in / Check-out Records", icon: Clock, path: "/check-records" },
+    { title: "QR Scanner", icon: QrCode, path: "/qr-scanner" },
   ];
 
   return (

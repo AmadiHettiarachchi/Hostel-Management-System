@@ -7,6 +7,7 @@ import authRoutes from "./src/routes/authRoutes.js";
 import roomRoutes from "./src/routes/roomRoutes.js";
 import visitorRoutes from "./src/routes/visitorRoutes.js";
 import cleaningRoutes from "./src/routes/cleaningRoutes.js";
+import checkRoutes from "./src/routes/checkRoutes.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/visitors", visitorRoutes);
 app.use("/api/cleaning", cleaningRoutes);
+app.use("/api/check-records", checkRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
