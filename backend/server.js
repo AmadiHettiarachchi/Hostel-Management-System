@@ -8,6 +8,7 @@ import roomRoutes from "./src/routes/roomRoutes.js";
 import visitorRoutes from "./src/routes/visitorRoutes.js";
 import cleaningRoutes from "./src/routes/cleaningRoutes.js";
 import checkRoutes from "./src/routes/checkRoutes.js";
+import paymentRoutes from "./src/routes/paymentRoutes.js";
 
 dotenv.config();
 
@@ -15,6 +16,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
   res.send("HostelHub backend is running");
@@ -29,6 +32,7 @@ app.use("/api/rooms", roomRoutes);
 app.use("/api/visitors", visitorRoutes);
 app.use("/api/cleaning", cleaningRoutes);
 app.use("/api/check-records", checkRoutes);
+app.use("/api/payments", paymentRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
