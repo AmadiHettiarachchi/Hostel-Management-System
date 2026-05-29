@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { ArrowLeft, QrCode } from "lucide-react";
 
 function QRScanner() {
-  const [lastScan, setLastScan] = useState("");
+  const [message, setMessage] = useState("");
+  const isScanningRef = useRef(false);
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
@@ -18,29 +19,31 @@ function QRScanner() {
 
     scanner.render(
       async (decodedText) => {
-        if (decodedText === lastScan) return;
-
-        setLastScan(decodedText);
+        if (isScanningRef.current) return;
+        isScanningRef.current = true;
 
         try {
+          console.log("SCANNED QR:", decodedText);
+
           const res = await fetch("http://localhost:5000/api/check-records", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              qrData: decodedText,
-            }),
+            body: JSON.stringify({ qrData: decodedText }),
           });
 
           const data = await res.json();
 
+          setMessage(data.message);
           alert(data.message);
 
-          scanner.clear();
+          await scanner.clear();
         } catch (error) {
-          console.log(error);
+          console.log("QR scan error:", error);
+          setMessage("Scan failed");
           alert("Scan failed");
+          isScanningRef.current = false;
         }
       },
       () => {}
@@ -49,7 +52,7 @@ function QRScanner() {
     return () => {
       scanner.clear().catch(() => {});
     };
-  }, [lastScan]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#F6EFE6] text-[#3B2F2F]">
@@ -77,10 +80,13 @@ function QRScanner() {
             <h2 className="text-2xl font-black">Scan Student QR</h2>
           </div>
 
-          <div
-            id="qr-reader"
-            className="bg-white rounded-2xl overflow-hidden"
-          ></div>
+          {message && (
+            <div className="mb-5 bg-[#F6EFE6] border border-[#E7CDB5] rounded-xl p-4 text-[#800080] font-bold">
+              {message}
+            </div>
+          )}
+
+          <div id="qr-reader" className="bg-white rounded-2xl overflow-hidden"></div>
         </section>
       </main>
     </div>
