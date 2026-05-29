@@ -1,15 +1,8 @@
-import Rating from "../models/Rating.js";
+import Rating from "../models/Ratings.js";
 
 export const createRating = async (req, res) => {
   try {
-    const {
-      studentId,
-      studentName,
-      studentEmail,
-      category,
-      rating,
-      comment,
-    } = req.body;
+    const { studentId, studentName, studentEmail, category, rating } = req.body;
 
     if (!studentId || !studentName || !studentEmail || !category || !rating) {
       return res.status(400).json({
@@ -31,7 +24,6 @@ export const createRating = async (req, res) => {
       studentEmail,
       category,
       rating: ratingValue,
-      comment,
     });
 
     res.status(201).json({

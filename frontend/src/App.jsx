@@ -22,6 +22,7 @@ import StudentFeedback from "./pages/StudentFeedback";
 import StudentRatings from "./pages/StudentRatings";
 import RoomGallery from "./pages/RoomGallery";
 import QRScanner from "./pages/QRScanner";
+import RatingsManagement from "./pages/RatingsManagement";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
         <Route path="/student-ratings" element={<StudentRatings />} />
         <Route path="/rooms" element={<RoomGallery />} />
         <Route path="/qr-scanner" element={<QRScanner />} />
+        <Route path="/ratings-management" element={<RatingsManagement />} />
 
         <Route path="/backend-test" element={<BackendTest />} />
       </Routes>
