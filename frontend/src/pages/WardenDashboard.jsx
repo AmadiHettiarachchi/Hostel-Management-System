@@ -62,6 +62,12 @@ function WardenDashboard() {
       icon: Star,
       path: "/ratings-management",
     },
+    {
+      title: "Student List",
+      description: "View all registered hostel students",
+      icon: Users,
+      path: "/student-list",
+    },
   ];
 
   const handleLogout = () => {

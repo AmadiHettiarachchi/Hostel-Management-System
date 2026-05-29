@@ -11,6 +11,7 @@ import checkRoutes from "./src/routes/checkRoutes.js";
 import paymentRoutes from "./src/routes/paymentRoutes.js";
 import feedbackRoutes from "./src/routes/feedbackRoutes.js";
 import ratingRoutes from "./src/routes/ratingRoutes.js";
+import userRoutes from "./src/routes/userRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -36,6 +37,7 @@ app.use("/api/check-records", checkRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/feedbacks", feedbackRoutes);
 app.use("/api/ratings", ratingRoutes);
+app.use("/api/users", userRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
