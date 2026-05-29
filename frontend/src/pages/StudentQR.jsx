@@ -10,15 +10,17 @@ function StudentQR() {
   const [countdown, setCountdown] = useState(50);
 
   const generateQR = () => {
-    const qr = JSON.stringify({
-      studentId: user?.id,
-      studentName: user?.fullName,
-      generatedAt: Date.now(),
-    });
+  if (!user) return;
 
-    setQrValue(qr);
-    setCountdown(50);
-  };
+  const qr = JSON.stringify({
+    studentId: user.id,
+    studentName: user.fullName,
+    generatedAt: Date.now(),
+  });
+
+  setQrValue(qr);
+  setCountdown(50);
+};
 
   useEffect(() => {
     generateQR();

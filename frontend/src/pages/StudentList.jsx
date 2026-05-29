@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Users, Mail, Phone, IdCard } from "lucide-react";
+import { ArrowLeft, Users, Mail, Phone, IdCard, Trash2 } from "lucide-react";
 
 function StudentList() {
   const [students, setStudents] = useState([]);
@@ -18,6 +18,33 @@ function StudentList() {
     }
   };
 
+  const deleteStudent = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to remove this student from the hostel system?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/users/students/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Delete failed");
+        return;
+      }
+
+      alert("Student removed successfully");
+      fetchStudents();
+    } catch (error) {
+      console.log("Delete student error:", error);
+      alert("Server error");
+    }
+  };
+
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -26,11 +53,9 @@ function StudentList() {
     <div className="min-h-screen bg-[#F6EFE6] text-[#3B2F2F]">
       <header className="bg-[#F3E2D0] border-b border-[#E7CDB5] px-8 py-5 flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-black text-[#800080]">
-            Student List
-          </h1>
+          <h1 className="text-2xl font-black text-[#800080]">Student List</h1>
           <p className="text-[#7A6252]">
-            View all registered students in the hostel
+            View and manage all registered students
           </p>
         </div>
 
@@ -85,6 +110,15 @@ function StudentList() {
                   <p className="text-sm text-[#7A6252] mt-2">
                     Parent Phone: {student.parentPhone}
                   </p>
+
+                  <button
+                    type="button"
+                    onClick={() => deleteStudent(student._id)}
+                    className="mt-5 w-full flex items-center justify-center gap-2 bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700"
+                  >
+                    <Trash2 size={18} />
+                    Remove Student
+                  </button>
                 </div>
               ))}
             </div>
